@@ -4,12 +4,36 @@ services:
   database:
     build: ./mariadb
     volumes:
-      - dbdata:/var/lib/mysql
+      - db:/var/lib/mysql
     networks:
       - network
+    restart: always
+    env_file:
+      - .env
+
+  wordpress:
+    build: ./wordpress
+    volumes:
+      - wordpress:/var/www/html
+    networks:
+      - network
+    restart: always
+    env_file:
+      - .env
+
+  nginx:
+    build: ./nginx
+    volumes:
+      - wordpress:/var/www/html
+    networks:
+      - network
+    ports:
+      - 443:443
+    restart: always
 
 volumes:
-  dbdata:
+  db:
+  wordpress:
 
 networks:
   network:
